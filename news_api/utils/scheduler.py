@@ -7,6 +7,7 @@ import requests
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sys import platform
+import os
 
 
 def connect_to_db(db_path):
@@ -25,7 +26,7 @@ def get_news():
     """Function that fetches 20 current headlines from the News API
     """
 
-    url = 'https://newsapi.org/v2/top-headlines?country=us&apiKey=62d8cce09c5f447ea8d980720d63b3ef'
+    url = 'https://newsapi.org/v2/top-headlines?country=us&apiKey={}'.format(os.environ.get('NEWS_API_KEY'))
     response = requests.get(url)
 
     return response.json()['articles']
@@ -45,10 +46,16 @@ def extract_text(url):
 
 
 def analyze_text(text):
+    # tone_analyzer = ToneAnalyzerV3(
+    #         version='2017-09-21',
+    #         username='637f0158-041b-45af-99c6-1035adfcb148',
+    #         password='fooszZRwri2t')
+
     tone_analyzer = ToneAnalyzerV3(
-            version='2017-09-21',
-            username='637f0158-041b-45af-99c6-1035adfcb148',
-            password='fooszZRwri2t')
+        version='2017-09-21',
+        iam_apikey=os.environ.get('WATSON_KEY'),
+        url='https://gateway.watsonplatform.net/tone-analyzer/api'
+    )
 
     return tone_analyzer.tone(
             {'text': text},
@@ -60,10 +67,12 @@ def job():
     We can trigger at a specified interval (24-hour for demo purposes.
     1-hr or less in true production)
     """
-    # if platform == "linux" or platform == "linux2":
-    db_path = 'postgresql://benbenbuhben:password@newsapi.ckyulxkbmgtj.us-east-2.rds.amazonaws.com/news_api'
-    # elif platform == "darwin":
-    # db_path = 'postgres://localhost:5432/news_api'
+
+    if platform == "linux" or platform == "linux2":
+        db_path = os.environ.get('RDS_PATH')
+    elif platform == "darwin":
+        db_path = 'postgres://localhost:5432/news_api'
+
 
     session = connect_to_db(db_path)
 
