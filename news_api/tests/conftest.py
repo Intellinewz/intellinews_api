@@ -87,13 +87,13 @@ def test_entry():
         title='Any News',
         url='http://www.cnn.com',
         description='Anything is possible',
-        source='fox news',
-        data_published='any',
+        source='cnn',
+        date_published='any',
         dom_tone='Joy',
         image='any'
     )
 
-
+@pytest.fixture
 def test_account():
     """Test account entry."""
     return Account(
@@ -109,7 +109,7 @@ def configuration(request):
         'sqlalchemy.url': 'postgres://localhost:5432/news_test'
         # 'sqlalchemy.url': 'postgres://roman:password@localhost:5432/news_test'
 
-      
+
     })
     config.include('news_api.models')
     config.include('news_api.routes')

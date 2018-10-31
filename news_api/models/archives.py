@@ -29,6 +29,7 @@ class Archives(Base):
         self.title = title
         self.description = description
         self.source = source
+        self.date_published = date_published
         self.url = url
         self.dom_tone = dom_tone
         self.image = image
