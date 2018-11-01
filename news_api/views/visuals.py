@@ -26,6 +26,9 @@ class VisualizationAPIViewset(APIViewSet):
         """Ping database and send back list of all news articles in archives
         """
 
+
+        # test_parse = urllib.parse.parse_qs()
+
         body = ''
 
         id = id.lower()
