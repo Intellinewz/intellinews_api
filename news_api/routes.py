@@ -16,5 +16,5 @@ def includeme(config):
     # TODO: Add in permissions for preferences.
     router.register('api/v1/preferences', PreferencesAPIView, 'preferences', permission='admin')
     # TODO: Add in permissions for feed.
-    router.register('api/v1/feed', FeedAPIView, 'feed', permission='admin')
+    router.register('api/v1/feed', FeedAPIView, 'feed')
     router.register('api/v1/visuals', VisualizationAPIViewset, 'visuals')
