@@ -21,6 +21,7 @@ watson-developer-cloud = "*"
 "goose3" = "*"
 jupyter = "*"
 alembic = "*"
+textstat = "*"
 
 [dev-packages]
 

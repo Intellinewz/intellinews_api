@@ -8,6 +8,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sys import platform
 import os
+import textstat
+import json
 
 
 def connect_to_db(db_path):
@@ -62,6 +64,35 @@ def analyze_text(text):
             'application/json')
 
 
+def analyze_vocab(text):
+    return {
+        'num_words':
+        textstat.lexicon_count(text),
+        'flesch_reading_ease':
+        textstat.flesch_reading_ease(text),
+        'smog_index':
+        textstat.smog_index(text),
+        'flesch_kincaid_grade':
+        textstat.flesch_kincaid_grade(text),
+        'coleman_liau_index':
+        textstat.coleman_liau_index(text),
+        'automated_readability_index':
+        textstat.automated_readability_index(text),
+        'dale_chall_readability_score':
+        textstat.dale_chall_readability_score(text),
+        'difficult_words':
+        textstat.difficult_words(text),
+        'linsear_write_formula':
+        textstat.linsear_write_formula(text),
+        'gunning_fog':
+        textstat.gunning_fog(text),
+        'text_standard':
+        textstat.text_standard(text, float_output=True)
+    }
+
+
+# TODO: This function is too long. Refactor further.
+
 def job():
     """Job to be scheduled for 3-step News Fetch/Extraction/Analyze.
     We can trigger at a specified interval (24-hour for demo purposes.
@@ -73,10 +104,7 @@ def job():
     elif platform == "darwin":
         db_path = 'postgres://localhost:5432/news_api'
 
-
     session = connect_to_db(db_path)
-
-    # TODO: Archive data before deleting. In a for loop, retrieve each row from the feed table, then post to the archive table.
     session.query(Feed).delete()
     session.commit()
 
@@ -84,7 +112,6 @@ def job():
 
     parsed_article_list = []
 
-    # TODO: Expand parsed_article below to include description, source, data published, etc.
     for obj in api_response:
         parsed_article = {
             'title': obj['title'],
@@ -100,12 +127,33 @@ def job():
 
     for article in parsed_article_list:
         url = article['url']
-
         text = extract_text(url)
         if not text:
             continue
 
+        vocab_analysis = analyze_vocab(text)
         tone_analysis = analyze_text(text).get_result()
+
+        num_analyzed_sentences = 0
+        sentence_breakdown = {
+            'Analytical': 0,
+            'Tentative': 0,
+            'Confident': 0,
+            'Joy': 0,
+            'Anger': 0,
+            'Fear': 0,
+            'Sadness': 0
+        }
+        if 'sentences_tone' in tone_analysis:
+            for sentence in tone_analysis['sentences_tone']:
+                if len(sentence['tones']):
+                    num_analyzed_sentences += 1
+                    dom_sentence_tone = sorted(
+                        sentence['tones'],
+                        key=lambda k: k['score'])[-1]['tone_name']
+                    sentence_breakdown[dom_sentence_tone] += 1
+            for key, val in sentence_breakdown.items():
+                sentence_breakdown[key] = round(val / num_analyzed_sentences, 2)
 
         if len(tone_analysis['document_tone']['tones']):
             dom_tone = tone_analysis['document_tone']['tones'][-1]['tone_name']
@@ -116,21 +164,48 @@ def job():
                 'source': article['source'],
                 'date_published': article['date_published'],
                 'image': article['image'],
-                'dom_tone': dom_tone
+                'dom_tone': dom_tone,
+                'num_words': vocab_analysis['num_words'],
+                'sentence_breakdown': sentence_breakdown,
+                'vocab_score': vocab_analysis['text_standard'],
                 }
             analyzed_articles.append(article)
 
             try:
-                article_to_insert = Feed(title=article['title'], description=article['description'], source=article['source'], date_published=article['date_published'], url=article['url'], dom_tone=article['dom_tone'], image=article['image'])
-                article_to_insert_archive = Archives(title=article['title'], description=article['description'], source=article['source'], date_published=article['date_published'], url=article['url'], dom_tone=article['dom_tone'], image=article['image'])
+                article_to_insert = Feed(
+                    title=article['title'],
+                    description=article['description'],
+                    source=article['source'],
+                    date_published=article['date_published'],
+                    url=article['url'],
+                    dom_tone=article['dom_tone'],
+                    image=article['image'],
+                    num_words=article['num_words'],
+                    sentence_breakdown=article['sentence_breakdown'],
+                    vocab_score=article['vocab_score'],
+                )
+
+                article_to_insert_archive = Archives(
+                    title=article['title'],
+                    description=article['description'],
+                    source=article['source'],
+                    date_published=article['date_published'],
+                    url=article['url'],
+                    dom_tone=article['dom_tone'],
+                    image=article['image'],
+                    num_words=article['num_words'],
+                    sentence_breakdown=article['sentence_breakdown'],
+                    vocab_score=article['vocab_score'],
+                )
+
                 article_exists = session.query(
                     session.query(Feed).filter_by(title=article['title']).exists()).scalar()
+
                 if not article_exists:
                     session.add(article_to_insert)
                 else:
                     session.commit()
                     continue
-
 
                 exists = session.query(
                     session.query(Archives).filter_by(title=article['title']).exists()).scalar()
