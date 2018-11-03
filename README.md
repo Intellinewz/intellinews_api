@@ -6,9 +6,6 @@ News feed API providing analysis on each articles' sentiment tones, reading leve
 ## AWS Deployment EC2 Instance:
 [http://ec2-18-223-109-140.us-east-2.compute.amazonaws.com/](http://ec2-18-223-109-140.us-east-2.compute.amazonaws.com/)
 
-## Github Repository
-[https://github.com/PythonMidterm/news_api](https://github.com/PythonMidterm/news_api)
-
 ----
 ## Table of Contents
 * [Overview](#overview)
