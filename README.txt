@@ -8,26 +8,31 @@ Getting Started
 
     cd news_api
 
-- Create a Python virtual environment.
+- Enter the virtual environment.
 
-    python3 -m venv env
+    pipenv shell
 
-- Upgrade packaging tools.
+- Install pip modules.
 
-    env/bin/pip install --upgrade pip setuptools
+    pipenv install
 
 - Install the project in editable mode with its testing requirements.
 
-    env/bin/pip install -e ".[testing]"
+    pipenv install -e ".[testing]"
 
 - Configure the database.
 
-    env/bin/initialize_news_api_db development.ini
+    initialize_news_api_db development.ini
+
+- Run database migrations.
+
+    alembic revision --autogenerate -m "{insert comment indicative of model changes}"
+    alembic upgrade head
 
 - Run your project's tests.
 
-    env/bin/pytest
+    pytest
 
 - Run your project.
 
-    env/bin/pserve development.ini
+    pserve development.ini --reload

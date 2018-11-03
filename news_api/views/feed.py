@@ -46,6 +46,7 @@ class FeedAPIView(APIViewSet):
             # Eventually, use this except or an if conditional to hit the temp table.
             except (DataError, AttributeError):
                 return Response(json='Not Found', status=404)
+
             schema = FeedSchema()
             feed = [schema.dump(article).data for article in feed_sql]
             # Create array of objects sorted by time (only articles with requested tone)
