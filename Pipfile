@@ -20,6 +20,7 @@ schedule = "*"
 watson-developer-cloud = "*"
 "goose3" = "*"
 jupyter = "*"
+alembic = "*"
 
 [dev-packages]
 
