@@ -1,6 +1,6 @@
 # Intellinewz API
 
-An API with exposed endpoints to filter a newsfeed based on a user's preference for dominate tones calculated based on tone analysis.
+News feed API providing analysis on each articles' sentiment tones, reading level scores, total number of words, news source veracity/political leaning, and more!
 
 ----
 ## AWS Deployment EC2 Instance:
@@ -14,23 +14,23 @@ An API with exposed endpoints to filter a newsfeed based on a user's preference 
 * [Overview](#overview)
 * [Technologies](#technologies)
 * [Getting Started](#start)
-* [Participants](#participants)
+* [Contributors](#participants)
 * [Routes](#routes)
 * [Wireframe](#wireframe)
-* [User Stories](#user-stories)
+* [Change Log](#change-log)
 ----
 <a id="overview"></a>
 ## Overview:
-This app uses bcrypt.BCRYPTPasswordManager.
-This app draws from the News API and IBM Watson's Tone Analysis API.
-This app is made to provide a user with the ability to see news based on their tone preferences.
-The problem being solved is that it allows people to understand predominant tones in the articles they read so as to better understand potential biases in their news sources.
+The media we consume has significant effects on our mood, thoughts, and understanding of the world. The problem is that news outlets are incentivized not necessarily to inform, but to get users to subscribe, to tune in, or to click a link. In this light, headlines/content too often sensational, anecdotal, and appeal to emotion and not to our sense of reason. 
 
+Our vision is to develop a news feed that provides rich data, analysis, and visualization of each article and news source by leveraging current open source NLP and other social science tools, so that users can get the most out of the news.
 
 ----
 <a id="technologies"></a>
-## Technologies required:
-- Python3, News API, Goose Text Extractor, IMB Watson Tone Analyzer (ToneAnalyzerV3), AWS, Gunicorn, WSGI, bcrypt, datetime, sqlalchemy, pyramid_restful, json, marshmallow, shedule, jupyter, numpy, pandas.
+## Technologies employed:
+- **API:** Pyramid Rest Framework (Pylons) and SqlAlchemy.
+- **Primary 3rd party text analysis tools:** News API, Goose Text Extractor, IBM Watson Tone Analyzer, Textstat
+- **Data Viz:** NumPy, Pandas, Matplotlib, Bokeh
 
 ----
 <a id="start"></a>
@@ -38,19 +38,21 @@ The problem being solved is that it allows people to understand predominant tone
 - Clone the repository from github using the command "git clone [repository link]" in your CLI.
 - Use "pipenv shell" in your command line to set up your virtual environment.
 - Use "pipenv install" to install all of the necessary dependencies.
+- Reference the README.txt for setting up the database in local dev.
 - Use "pserve development.ini --reload" to start your server
-- Make calls to the routes in an app like Postman or using HTTPy.
-- ALSO, look in the README.txt provided by Pyramid for further instruction.
+- Hit API routes using Postman (or similar tool).
+- React-based front-end is in development!
 ----
 <a id="participants"></a>
 ## Particapants:
-- Luther Mckeiver
 - Ben Hurst
+- Justin Morris
 - Madeline Peters
 - Roman Kireev
+- Luther Mckeiver
 ----
 <a id="routes"></a>
-## Routes:
+## Routes (currently in flux, needs to be updated):
 **Home:** `/`
 * GET: Splash page with login prompt.
 
@@ -103,22 +105,10 @@ account = {
 ----
 
 <a id="wireframe"></a>
-## Wireframe:
+## Initial concept wireframe:
 ![Wireframe ](/news_api/assets/wireframe.png)
 
 ----
-<a id="user-stories"></a>
-## User Stories:
-* As a user, I would like a news feed filtered by number of articles and categories.
-* As a user, I would like to access just the text from the body of an article from its url to perform analysis on.
-* As a user, I would like to sort my newsfeed by tone.
-* As a user, I would like quick loading- tone has already been analyzed before I request.
-* As a user, I would like my prefs to persist.
-* As a user, I would like clear documentation.
-* As a user, I would like to use  a robust framework.
-* As a user, I would like greater than 80% test coverage.
-* As a user, I would like an app that analyzes news stories so I can better understand the author's tone or potential biases.
-* As a user, I would like to be able to filter my news feed so that I can see news more relevant to my tone preferences.
-* As a user, I would like to see articles ranked according to my preferences so that I have a personal news feed.
-* As a user, I would like to be able to filter so I can see only the categories I specified.
-As a user, I would like to have my preferences persist so they're still there when I return to the page.
+<a id="change-log"></a>
+## Change Log:
+
