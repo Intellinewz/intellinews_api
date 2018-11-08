@@ -7,6 +7,7 @@ import requests
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sys import platform
+from .visuals import render_pie_charts
 import os
 import textstat
 import json
@@ -212,6 +213,10 @@ def job():
                 if not exists:
                     session.add(article_to_insert_archive)
                 else:
+                    # Here create pie chart for each source
+
+
+                    render_pie_charts(session)
                     session.commit()
                     continue
 

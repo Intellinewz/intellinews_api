@@ -21,27 +21,25 @@ from bokeh.plotting import figure
 from bokeh.transform import cumsum
 
 
-class VisualizationAPIViewset(APIViewSet):
-    def retrieve(self, request, id=None):
-        """Render pie chart of tone breakdown for specified news source
-        """
+def render_pie_charts(session):
+    try:
+        archives_sql = session.query(Archives).all()
+    except (DataError, AttributeError):
+        pass
+    all_articles = []
+    for article in archives_sql:
+        schema = ArchivesSchema()
+        all_articles.append(schema.dump(article).data)
 
-        id = id.lower()
-        try:
-            archives_sql = Archives.get_all(request)
-        except (DataError, AttributeError):
-            return Response(json='Not Found', status=404)
-        sample_data = []
-        for article in archives_sql:
-            schema = ArchivesSchema()
-            sample_data.append(schema.dump(article).data)
-
-        parsed_url = request.current_route_url()
-        chart_type = urlparse(parsed_url).query.split('=')[1]
-
+    all_sources = list(set([article['source'] for article in all_articles]))
+    # This will eventually be dynamic, but we only have one chart to send for now.
+    chart_type = 'pie'
+    # import pdb; pdb.set_trace()
+    for source in all_sources:
+        source = source.lower()
         if chart_type == 'pie':
-            df = pd.DataFrame(sample_data)
-            df_source = df.loc[df['source'].str.lower() == id]
+            df = pd.DataFrame(all_articles)
+            df_source = df.loc[df['source'].str.lower() == source]
             df_count_anger = df_source.loc[df['dom_tone'] == 'Anger'].shape[0]
             df_count_fear = df_source.loc[df['dom_tone'] == 'Fear'].shape[0]
             df_count_joy = df_source.loc[df['dom_tone'] == 'Joy'].shape[0]
@@ -66,7 +64,7 @@ class VisualizationAPIViewset(APIViewSet):
             data['angle'] = data['value']/sum(x.values()) * 2*pi
             data['color'] = Category20c[len(x)]
 
-            p = figure(plot_height=350, title=id, toolbar_location=None, tools="hover", tooltips="@tone: @value")
+            p = figure(plot_height=350, title=source, toolbar_location=None, tools="hover", tooltips="@tone: @value")
 
             p.wedge(x=0, y=1, radius=0.4,
                     start_angle=cumsum('angle', include_zero=True), end_angle=cumsum('angle'),
@@ -78,13 +76,6 @@ class VisualizationAPIViewset(APIViewSet):
 
             bk.save(
                 p,
-                './news_api/static/pie_{}.html'.format(id),
-                title='source_versus_tone_{}'.format(id)
+                './news_api/static/pie_{}.html'.format(source),
+                title='source_versus_tone_{}'.format(source)
             )
-            f = codecs.open(
-                './news_api/static/pie_{}.html'.format(id),
-                'r'
-            )
-            body = f.read()
-
-        return Response(body=body, status=200)
