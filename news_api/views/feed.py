@@ -38,7 +38,7 @@ class FeedAPIView(APIViewSet):
             # Currently feed is already sorted by time, but we'll keep this in case we need to sort by another key (i.e., vocab score, social media hits, etc)
             # feed_sorted = sorted(feed_filtered, key=lambda x: x['id'], reverse=True)
 
-            return Response(json={'feed': feed_filtered}, status=200, headerlist=[('Access-Control-Allow-Origin', 'http://localhost:8080'), ('Content-Type', 'application/json')])
+            return Response(json={'feed': feed_filtered}, status=200, headerlist=[('Access-Control-Allow-Origin', 'http://localhost:3000'), ('Content-Type', 'application/json')])
 
         else:
             try:
@@ -54,7 +54,7 @@ class FeedAPIView(APIViewSet):
             # Currently feed is already sorted by time, but we'll keep this in case we need to sort by another key (i.e., vocab score, social media hits, etc)
             # feed_sorted = sorted(feed_filtered, key=lambda x: x['id'], reverse=True)
 
-            return Response(json={'feed': feed}, status=200, headerlist=[('Access-Control-Allow-Origin', 'http://localhost:8080'), ('Content-Type', 'application/json')])
+            return Response(json={'feed': feed}, status=200, headerlist=[('Access-Control-Allow-Origin', 'http://localhost:3000'), ('Content-Type', 'application/json')])
 
         if request.authenticated_userid:
             account = Account.one(request, request.authenticated_userid)
