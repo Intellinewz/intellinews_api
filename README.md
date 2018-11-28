@@ -58,7 +58,7 @@ Our vision is to develop a news feed that provides rich data, analysis, and visu
 * POST: Change existing preferences. If no preferences given, default provided.
 ~~~
 preference_order = {
-        'preference_order': 'test@example.com',
+        'preference_order': ['analytical', 'tentative', 'confident', 'joy', 'sadness', 'anger'],
     }
 response.status_code == 201
 ~~~
