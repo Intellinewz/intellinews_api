@@ -49,7 +49,7 @@ Our vision is to develop a news feed that provides rich data, analysis, and visu
 - Luther Mckeiver
 ----
 <a id="routes"></a>
-## Routes (currently in flux, needs to be updated):
+## Routes (in development):
 **Home:** `/`
 * GET: Splash page with login prompt.
 
@@ -74,7 +74,7 @@ response.status_code == 4**
 response.status_code == 4**
 ~~~~
 **Visuals:** `api/v1/visuals`
-* GET: See visual representations of the data in our article archives.
+* GET: Sends various data visualizations according to specified query parameter.
 
 **Authorization:**
 * `api/v1/auth/{auth}`
