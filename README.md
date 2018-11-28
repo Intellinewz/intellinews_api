@@ -105,7 +105,3 @@ account = {
 ## Initial concept wireframe:
 ![Wireframe ](/news_api/assets/wireframe.png)
 
-----
-<a id="change-log"></a>
-## Change Log:
-
