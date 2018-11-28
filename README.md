@@ -18,7 +18,7 @@ News feed API providing analysis on each articles' sentiment tones, reading leve
 ----
 <a id="overview"></a>
 ## Overview:
-The media we consume has significant effects on our mood, thoughts, and understanding of the world. The problem is that news outlets are incentivized not necessarily to inform, but to get users to subscribe, to tune in, or to click a link. In this light, headlines/content too often sensational, anecdotal, and appeal to emotion and not to our sense of reason. 
+The media we consume has significant effects on our mood, thoughts, and understanding of the world. The problem is that news outlets are incentivized not necessarily to inform, but to get users to subscribe, to tune in, or to click a link. In this light, headlines/content are too often sensational, anecdotal, and appeal to emotion and not to our sense of reason. 
 
 Our vision is to develop a news feed that provides rich data, analysis, and visualization of each article and news source by leveraging current open source NLP and other social science tools, so that users can get the most out of the news.
 
